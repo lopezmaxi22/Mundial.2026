@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mundial 2026 · Dashboard Deportivo</title>
+<meta name="description" content="Dashboard del Mundial 2026: resultados en vivo, tabla de posiciones, goleadores y estadísticas de cada partido en tiempo real. Sitio no oficial.">
+<!-- ===== GOOGLE ADSENSE: cuando Google te apruebe, descomenta esta linea y pone tu ca-pub-XXXX ===== -->
+<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -306,9 +309,15 @@
   .sp-title{font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2);text-align:center;margin-bottom:20px}
   .sp-logos{display:flex;align-items:center;justify-content:center;gap:clamp(30px,7vw,80px);flex-wrap:wrap}
   .sp-item{display:inline-flex;align-items:center;justify-content:center;opacity:.5;transition:.25s ease}
-  .sp-item img{height:48px;width:auto;display:block;filter:drop-shadow(0 2px 9px rgba(0,0,0,.45))}
+  .sp-item img{width:auto;display:block;filter:drop-shadow(0 2px 9px rgba(0,0,0,.45))}
+  .sp-malasia img,.sp-ml img{height:60px}
+  .sp-explotter img{height:42px}
   .sp-item:hover{opacity:1;transform:translateY(-2px) scale(1.05);filter:drop-shadow(0 0 16px rgba(108,196,245,.45))}
-  @media(max-width:600px){.sp-item img{height:38px}.sp-logos{gap:30px}}
+  @media(max-width:600px){.sp-malasia img,.sp-ml img{height:48px}.sp-explotter img{height:34px}.sp-logos{gap:24px}}
+  /* ===== RESUMEN INICIO ===== */
+  .rs-h{font-family:'Oswald';font-weight:600;font-size:15px;letter-spacing:.3px;color:var(--txt);margin:24px 0 12px;display:flex;align-items:center;gap:8px}
+  .rs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  @media(max-width:600px){.rs-grid{grid-template-columns:1fr}}
   /* RESPONSIVE */
   @media(max-width:600px){
     .bg-art{width:128vw;opacity:.12;top:40%}
@@ -338,6 +347,13 @@
     .hero-side .flag{font-size:24px}
     .score{font-size:17px;padding:3px 8px}
   }
+  /* ===== CAFECITO + FOOTER LINKS ===== */
+  .support{text-align:center;margin:26px 0 6px}
+  .cafecito{display:inline-flex;align-items:center;gap:9px;padding:11px 22px;border-radius:30px;font-family:'Oswald',sans-serif;font-weight:600;font-size:14px;letter-spacing:.4px;text-decoration:none;color:#1a1205;background:linear-gradient(135deg,#FFD45E,#FF9F1C);box-shadow:0 6px 20px rgba(255,159,28,.28);transition:.22s ease}
+  .cafecito:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 28px rgba(255,159,28,.45)}
+  .foot-links{margin-bottom:10px}
+  .foot-links a{color:var(--muted);text-decoration:none;font-size:12.5px;margin:0 7px;transition:.2s}
+  .foot-links a:hover{color:var(--txt)}
 </style>
 </head>
 <body>
@@ -405,7 +421,8 @@
 
 <nav>
   <div class="nav-inner">
-    <button class="tab active" data-view="grupos">Grupos</button>
+    <button class="tab active" data-view="inicio">Inicio</button>
+    <button class="tab" data-view="grupos">Grupos</button>
     <button class="tab" data-view="partidos">Partidos</button>
     <button class="tab" data-view="r32">Cuadro</button>
     <button class="tab" data-view="goleadores">Goleadores</button>
@@ -416,7 +433,13 @@
 </nav>
 
 <main class="wrap">
-  <section class="view active" id="grupos">
+  <section class="view active" id="inicio">
+    <div class="section-h">Resumen del torneo</div>
+    <p class="lead">Lo último del Mundial: partidos en vivo, resultados recientes y lo que se viene. Tocá cualquier partido para ver el detalle completo.</p>
+    <div id="resumenContainer"><div class="loading">Cargando partidos…</div></div>
+  </section>
+
+  <section class="view" id="grupos">
     <div class="section-h">Grupos y posiciones</div>
     <p class="lead">Las tablas se calculan <b>solas</b> con cada resultado. Tocá una selección para ver su ficha. Clasifican los <b>2 primeros</b> de cada grupo + los <b>8 mejores terceros</b>.</p>
     <div class="grp-chips" id="grpChips"></div>
@@ -486,13 +509,19 @@
   <div class="wrap">
     <div class="sp-title">Auspiciantes</div>
     <div class="sp-logos">
-      <a class="sp-item" href="https://canillerasmalasia.com.ar" target="_blank" rel="noopener" title="Canilleras Malasia"><img src="sponsors/malasia.svg" alt="Canilleras Malasia"></a>
-      <a class="sp-item" href="https://www.linkedin.com/in/maximiliano-gabriel-lopez-785155268" target="_blank" rel="noopener" title="ML Cybersecurity & Networks"><img src="sponsors/ml.svg" alt="ML Cybersecurity & Networks"></a>
-      <a class="sp-item" href="#" target="_blank" rel="noopener" title="Explotter"><img src="sponsors/explotter.svg" alt="Explotter"></a>
+      <a class="sp-item sp-malasia" href="https://canillerasmalasia.com.ar" target="_blank" rel="noopener" title="Canilleras Malasia"><img src="sponsors/malasia.svg" alt="Canilleras Malasia"></a>
+      <a class="sp-item sp-ml" href="https://www.linkedin.com/in/maximiliano-gabriel-lopez-785155268" target="_blank" rel="noopener" title="ML Cybersecurity & Networks"><img src="sponsors/ml.svg" alt="ML Cybersecurity & Networks"></a>
+      <a class="sp-item sp-explotter" href="#" target="_blank" rel="noopener" title="Explotter"><img src="sponsors/explotter.svg" alt="Explotter"></a>
     </div>
   </div>
 </section>
-<footer><b>MUNDIAL 2026</b> · Dashboard deportivo · resultados en vivo automáticos<br>Repo: lopezmaxi22/Mundial.2026</footer>
+<div class="support">
+  <a class="cafecito" href="https://cafecito.app/TU-USUARIO" target="_blank" rel="noopener">☕ Invitame un cafecito</a>
+</div>
+<footer>
+  <div class="foot-links"><a href="acerca.html">Acerca de</a> · <a href="contacto.html">Contacto</a> · <a href="privacidad.html">Privacidad</a></div>
+  <b>MUNDIAL 2026</b> · Dashboard deportivo · sitio no oficial<br>Hecho con ⚡ por ML Cybersecurity &amp; Networks
+</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
@@ -540,7 +569,7 @@ async function boot(){
   syncBDL();
   setInterval(syncBDL, 45000);
 }
-function renderAll(){ renderTicker();renderHero();renderGroups();renderFilters();renderMatches();renderBracket();renderScorers();renderRanking();renderStats(); if(!window.__an){window.__an=1; if(window.gsap&&window.ScrollTrigger)animateIntro();} }
+function renderAll(){ renderTicker();renderHero();renderResumen();renderGroups();renderFilters();renderMatches();renderBracket();renderScorers();renderRanking();renderStats(); if(!window.__an){window.__an=1; if(window.gsap&&window.ScrollTrigger)animateIntro();} }
 function fmt(iso){try{const d=new Date(iso);return d.toLocaleString('es-AR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+' hs';}catch(e){return iso||'—';}}
 function mmin(x){if(x==null)return'';const s=String(x).trim();const mm=s.match(/^(\d{1,3}):\d{2}/);if(mm)return mm[1]+"'";if(/^\d{1,3}'?$/.test(s))return s.replace(/'?$/,"'");return'';}
 function fmtKOtime(iso){try{return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',minute:'2-digit'});}catch(e){return'';}}
@@ -697,6 +726,32 @@ function renderHero(){
   </div>`;
 }
 
+/* ===== RESUMEN / INICIO ===== */
+function rsCard(m){
+  const H=T[m.h],A=T[m.a]; if(!H||!A) return "";
+  const ft=m.s==="FT", lv=m.s==="LIVE";
+  const stTxt = lv?`<span class="status lv">● EN VIVO${mmin(m.min)?' '+mmin(m.min):''}</span>` : ft?`<span class="status ft">● FINAL</span>` : `<span class="status up">${m.ko?fmtKOtime(m.ko)+' hs':'PRONÓSTICO'}</span>`;
+  const showScore=(ft||lv);
+  return `<div class="match${lv?' islive':''}" style="cursor:pointer" onclick="openMatch(${m._i})">
+    <div class="m-top"><span class="gtag">GR. ${m.g}</span>${stTxt}</div>
+    <div class="m-body"><div class="side"><span class="flag">${fg(m.h)}</span><span class="nm">${H.n}</span></div>
+    <div class="score${lv?' lv':(ft?'':' pred')}">${showScore?`${m.hg} - ${m.ag}`:'vs'}</div>
+    <div class="side away"><span class="nm">${A.n}</span><span class="flag">${fg(m.a)}</span></div></div></div>`;
+}
+function renderResumen(){
+  const cont=document.getElementById("resumenContainer"); if(!cont) return; cont.innerHTML="";
+  const now=Date.now();
+  const live=M.filter(m=>m.s==="LIVE");
+  const ft=M.filter(m=>m.s==="FT").sort((a,b)=>(b.ko?Date.parse(b.ko):0)-(a.ko?Date.parse(a.ko):0)).slice(0,8);
+  const up=M.filter(m=>m.s!=="FT"&&m.s!=="LIVE"&&m.ko&&Date.parse(m.ko)>now).sort((a,b)=>Date.parse(a.ko)-Date.parse(b.ko)).slice(0,6);
+  let html="";
+  if(live.length) html+=`<div class="rs-h">🔴 En vivo ahora</div><div class="rs-grid">${live.map(rsCard).join("")}</div>`;
+  if(ft.length) html+=`<div class="rs-h">📋 Últimos resultados</div><div class="rs-grid">${ft.map(rsCard).join("")}</div>`;
+  if(up.length) html+=`<div class="rs-h">📅 Próximos partidos</div><div class="rs-grid">${up.map(rsCard).join("")}</div>`;
+  if(!html) html='<div class="empty-x">Todavía no hay partidos cargados. Volvé en un rato ⚽</div>';
+  cont.innerHTML=html;
+}
+
 /* ===== GRUPOS ===== */
 function renderGroups(){
   const chips=document.getElementById("grpChips");const cont=document.getElementById("groupsContainer");
@@ -835,7 +890,7 @@ function renderStats(){
 }
 
 /* ===== NAV ===== */
-function goHome(){ try{closeTeam();}catch(e){} goView('grupos'); window.scrollTo({top:0,behavior:'smooth'}); }
+function goHome(){ try{closeTeam();}catch(e){} goView('inicio'); window.scrollTo({top:0,behavior:'smooth'}); }
 function goView(v){
   document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.view===v));
   document.querySelectorAll(".view").forEach(x=>x.classList.toggle("active",x.id===v));

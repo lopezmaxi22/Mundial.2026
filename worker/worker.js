@@ -4,23 +4,22 @@
  * - La API key NUNCA va en este archivo. Se carga en Cloudflare como
  *   variable SECRETA llamada:  BDL_API_KEY
  *   (Worker > Settings > Variables and Secrets > Add > tipo Secret)
- * - Cachea cada endpoint para no quemar el rate limit (GOAT = 600 req/min)
- *   y para que todos los visitantes compartan el mismo dato.
- * - Agrega CORS para que tu sitio en github.io pueda llamarlo.
- *
- * Uso desde el front:
- *   https://TU-WORKER.workers.dev/api/matches?seasons[]=2026&per_page=100
- *   https://TU-WORKER.workers.dev/api/group_standings?seasons[]=2026
- *   https://TU-WORKER.workers.dev/api/match_events?match_ids[]=123
+ * - Cachea cada endpoint para no quemar el rate limit (GOAT = 600 req/min).
+ * - CORS RESTRINGIDO: solo tus dominios pueden usar el Worker desde el
+ *   navegador. Esto evita que otros sitios te roben la cuota de la API.
  */
 
 const BDL_BASE = "https://api.balldontlie.io/fifa/worldcup/v1";
 
-// Si querés blindar aun mas, cambia "*" por "https://lopezmaxi22.github.io"
-const ALLOW_ORIGIN = "*";
+// === SEGURIDAD: solo estos orígenes pueden llamar al Worker desde el browser ===
+// Cuando compres tu dominio propio, sumalo acá (descomentá y editá la última línea).
+const ALLOWED_ORIGINS = [
+  "https://lopezmaxi22.github.io",
+  "https://mundial-2026-45s.pages.dev",
+  // "https://TU-DOMINIO-PROPIO.com",
+];
 
 // Endpoints permitidos y su cache (en segundos).
-// Live (matches/eventos/stats) = cache corto. Estaticos = cache largo.
 const ROUTES = {
   matches:            25,
   group_standings:    60,
@@ -40,18 +39,24 @@ const ROUTES = {
   odds:               60,
 };
 
-function cors() {
+// Devuelve los headers CORS segun el Origin del request.
+// Si el Origin no esta en la lista blanca, usa el primero (tu github.io) como
+// default, de modo que un sitio de terceros NO recibe permiso para usar la API.
+function cors(request) {
+  const origin = request.headers.get("Origin") || "";
+  const allowed = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
-    "Access-Control-Allow-Origin": ALLOW_ORIGIN,
+    "Access-Control-Allow-Origin": allowed,
     "Access-Control-Allow-Methods": "GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
   };
 }
 
-function json(obj, status = 200) {
+function json(obj, request, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { "Content-Type": "application/json", ...cors() },
+    headers: { "Content-Type": "application/json", ...cors(request) },
   });
 }
 
@@ -59,25 +64,24 @@ export default {
   async fetch(request, env, ctx) {
     // Preflight CORS
     if (request.method === "OPTIONS") {
-      return new Response(null, { headers: cors() });
+      return new Response(null, { headers: cors(request) });
     }
 
     const url = new URL(request.url);
     const parts = url.pathname.replace(/^\/+/, "").split("/");
-    // Acepta /api/<endpoint> o /<endpoint>
     const endpoint = parts[0] === "api" ? parts[1] : parts[0];
 
-    // Health check rapido: /  o  /health
+    // Health check: /  o  /health
     if (!endpoint || endpoint === "health") {
-      return json({ ok: true, service: "mundial-2026 proxy", endpoints: Object.keys(ROUTES) });
+      return json({ ok: true, service: "mundial-2026 proxy", endpoints: Object.keys(ROUTES) }, request);
     }
 
     if (!(endpoint in ROUTES)) {
-      return json({ error: "endpoint no permitido", allowed: Object.keys(ROUTES) }, 400);
+      return json({ error: "endpoint no permitido", allowed: Object.keys(ROUTES) }, request, 400);
     }
 
     if (!env.BDL_API_KEY) {
-      return json({ error: "Falta el secret BDL_API_KEY en el Worker" }, 500);
+      return json({ error: "Falta el secret BDL_API_KEY en el Worker" }, request, 500);
     }
 
     const ttl = ROUTES[endpoint];
@@ -93,7 +97,7 @@ export default {
     const cached = await cache.match(cacheKey);
     if (cached) {
       const r = new Response(cached.body, cached);
-      Object.entries(cors()).forEach(([k, v]) => r.headers.set(k, v));
+      Object.entries(cors(request)).forEach(([k, v]) => r.headers.set(k, v));
       r.headers.set("X-Cache", "HIT");
       return r;
     }
@@ -105,7 +109,7 @@ export default {
         headers: { Authorization: env.BDL_API_KEY },
       });
     } catch (e) {
-      return json({ error: "fallo al contactar balldontlie", detail: String(e) }, 502);
+      return json({ error: "fallo al contactar balldontlie", detail: String(e) }, request, 502);
     }
 
     const body = await apiResp.text();
@@ -115,11 +119,10 @@ export default {
         "Content-Type": "application/json",
         "Cache-Control": `public, max-age=${ttl}`,
         "X-Cache": "MISS",
-        ...cors(),
+        ...cors(request),
       },
     });
 
-    // Guarda en cache solo respuestas OK
     if (apiResp.status === 200 && ttl > 0) {
       ctx.waitUntil(cache.put(cacheKey, r.clone()));
     }
