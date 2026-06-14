@@ -301,6 +301,14 @@
   .lu-p.sub{opacity:.6}
   .lu-p.sub .num{color:var(--muted);background:rgba(255,255,255,.05)}
   @media(max-width:560px){.lu-wrap{grid-template-columns:1fr;gap:18px}}
+  /* ===== SPONSORS ===== */
+  .sponsors{margin:34px 0 6px;padding:26px 0 24px;border-top:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.022),transparent)}
+  .sp-title{font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted2);text-align:center;margin-bottom:20px}
+  .sp-logos{display:flex;align-items:center;justify-content:center;gap:clamp(30px,7vw,80px);flex-wrap:wrap}
+  .sp-item{display:inline-flex;align-items:center;justify-content:center;opacity:.5;transition:.25s ease}
+  .sp-item img{height:48px;width:auto;display:block;filter:drop-shadow(0 2px 9px rgba(0,0,0,.45))}
+  .sp-item:hover{opacity:1;transform:translateY(-2px) scale(1.05);filter:drop-shadow(0 0 16px rgba(108,196,245,.45))}
+  @media(max-width:600px){.sp-item img{height:38px}.sp-logos{gap:30px}}
   /* RESPONSIVE */
   @media(max-width:600px){
     .bg-art{width:128vw;opacity:.12;top:40%}
@@ -474,6 +482,16 @@
   </section>
 </main>
 
+<section class="sponsors">
+  <div class="wrap">
+    <div class="sp-title">Auspiciantes</div>
+    <div class="sp-logos">
+      <a class="sp-item" href="https://canillerasmalasia.com.ar" target="_blank" rel="noopener" title="Canilleras Malasia"><img src="sponsors/malasia.svg" alt="Canilleras Malasia"></a>
+      <a class="sp-item" href="https://www.linkedin.com/in/maximiliano-gabriel-lopez-785155268" target="_blank" rel="noopener" title="ML Cybersecurity & Networks"><img src="sponsors/ml.svg" alt="ML Cybersecurity & Networks"></a>
+      <a class="sp-item" href="#" target="_blank" rel="noopener" title="Explotter"><img src="sponsors/explotter.svg" alt="Explotter"></a>
+    </div>
+  </div>
+</section>
 <footer><b>MUNDIAL 2026</b> · Dashboard deportivo · resultados en vivo automáticos<br>Repo: lopezmaxi22/Mundial.2026</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
