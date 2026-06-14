@@ -8,7 +8,7 @@ git commit -m "Dashboard Mundial 2026"
 git branch -M main
 git remote remove origin 2>nul
 git remote add origin https://github.com/lopezmaxi22/Mundial.2026.git
-git push -u origin main
+git push -u origin main --force
 echo.
 echo === Listo. Si pidio login, completalo en el navegador o en el Credential Manager. ===
 echo === Despues: activar GitHub Pages y cargar el secret FOOTBALL_API_KEY (ver README). ===
