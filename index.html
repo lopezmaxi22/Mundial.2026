@@ -405,13 +405,11 @@
   .ig-header h2{font-family:'Oswald';font-weight:600;font-size:clamp(20px,4vw,30px);letter-spacing:.03em;color:var(--txt)}
   .ig-header h2 span{color:var(--celeste)}
   .ig-sub{color:var(--muted);margin-bottom:22px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;font-family:'Oswald';font-weight:500}
-  .ig-widget-wrap{max-width:900px;margin:0 auto;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--celeste-d) transparent;padding-bottom:10px}
-  .ig-widget-wrap::-webkit-scrollbar{height:7px}
-  .ig-widget-wrap::-webkit-scrollbar-thumb{background:var(--celeste-d);border-radius:4px}
-  .ig-widget-wrap behold-widget{display:block;width:1180px;max-width:none;--behold-border-radius:10px;--behold-gap:10px;--behold-columns:8;--behold-rows:1}
+  .ig-widget-wrap{max-width:640px;margin:0 auto}
+  .ig-widget-wrap behold-widget{display:block;width:100%;margin:0 auto;--behold-border-radius:10px;--behold-gap:8px}
   .ig-link{display:inline-flex;align-items:center;gap:7px;margin-top:24px;padding:11px 22px;border-radius:26px;background:linear-gradient(135deg,#833AB4,#E1306C,#F77737);color:#fff;font-family:'Oswald';font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:.2s;box-shadow:0 4px 16px rgba(225,48,108,.32);transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}
   .ig-link:hover{transform:translateY(-2px) scale(1.03) translateZ(0);box-shadow:0 8px 24px rgba(225,48,108,.45)}
-  @media(max-width:600px){.ig-widget-wrap behold-widget{width:860px;--behold-columns:6;--behold-rows:1}}
+  @media(max-width:600px){.ig-widget-wrap{max-width:100%}}
   /* RESPONSIVE */
   @media(max-width:600px){
     .bg-art{width:128vw;opacity:.12;top:40%}
