@@ -332,6 +332,25 @@
   body.light{--bg:#EEF2F8;--bg2:#FFFFFF;--bg3:#E6EDF6;--panel:rgba(255,255,255,.96);--panel2:rgba(244,247,251,.92);--line:rgba(0,0,0,.10);--brd:rgba(0,0,0,.14);--txt:#15202E;--muted:#51607A;--muted2:#7E8DA4;--shadow:0 2px 10px rgba(0,0,0,.10),0 14px 40px rgba(0,0,0,.10);background:#EEF2F8}
   .theme-btn{position:fixed;top:14px;right:16px;z-index:80;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--txt);font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:.2s;display:flex;align-items:center;justify-content:center}
   .theme-btn:hover{transform:scale(1.08)}
+  /* ===== BOTON EN VIVO ===== */
+  .live-btn{position:fixed;bottom:18px;right:16px;z-index:85;display:none;align-items:center;gap:8px;padding:10px 17px;border:none;border-radius:30px;background:linear-gradient(135deg,#FF2D4B,#D11030);color:#fff;font-family:'Oswald';font-weight:600;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;box-shadow:0 6px 22px rgba(209,16,48,.5);animation:livePulse 1.6s ease-in-out infinite}
+  .live-btn .ldot{width:9px;height:9px;border-radius:50%;background:#fff;animation:liveBlink 1s steps(2,start) infinite}
+  .live-btn:hover{transform:scale(1.05)}
+  @keyframes livePulse{0%,100%{box-shadow:0 6px 22px rgba(209,16,48,.5)}50%{box-shadow:0 8px 32px rgba(255,45,75,.9)}}
+  @keyframes liveBlink{50%{opacity:.2}}
+  /* ===== MERCH / PRODUCTOS ===== */
+  .merch{max-width:1100px;margin:10px auto 0;padding:0 18px}
+  .merch-h{font-family:'Oswald';font-weight:600;font-size:15px;letter-spacing:.3px;color:var(--txt);margin:30px 0 14px;display:flex;align-items:center;gap:8px;justify-content:center}
+  .merch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+  .merch-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:.2s ease;text-decoration:none}
+  .merch-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--celeste-d)}
+  .merch-img{width:100%;aspect-ratio:1;background:linear-gradient(135deg,var(--bg3),var(--bg2));display:flex;align-items:center;justify-content:center;font-size:40px}
+  .merch-img img{width:100%;height:100%;object-fit:cover}
+  .merch-body{padding:11px 12px 13px}
+  .merch-name{font-family:'Inter';font-size:13px;font-weight:600;color:var(--txt);line-height:1.3;margin-bottom:6px;min-height:34px}
+  .merch-price{font-family:'Oswald';font-weight:600;font-size:15px;color:var(--celeste)}
+  .merch-cta{margin-top:9px;display:block;text-align:center;padding:8px;border-radius:8px;background:linear-gradient(135deg,#FFE600,#FFD000);color:#2d3277;font-family:'Oswald';font-weight:600;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase}
+  @media(max-width:600px){.merch-grid{grid-template-columns:1fr 1fr;gap:10px}}
   /* RESPONSIVE */
   @media(max-width:600px){
     .bg-art{width:128vw;opacity:.12;top:40%}
@@ -532,6 +551,51 @@
   </section>
 </main>
 
+<section class="merch">
+  <div class="merch-h">🛒 Productos del Mundial</div>
+  <div class="merch-grid">
+    <a class="merch-card" href="https://meli.la/21T6kmP" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">🩴</div>
+      <div class="merch-body"><div class="merch-name">Ojotas Adidas Adilette Aqua</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/1mpEyo2" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">⚽</div>
+      <div class="merch-body"><div class="merch-name">Pelota Adidas Mundial 26 Trionda</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/1MZkhT1" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">🧢</div>
+      <div class="merch-body"><div class="merch-name">Gorra Adidas AFA Argentina</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/17qmMC9" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">⚽</div>
+      <div class="merch-body"><div class="merch-name">Mini pelota Adidas Trionda Argentina</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/2eLjiuP" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">📺</div>
+      <div class="merch-body"><div class="merch-name">Smart TV Enova 43 Full HD</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/21qzhZf" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">📺</div>
+      <div class="merch-body"><div class="merch-name">Smart TV Quint 50 4K</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/1wTSgHT" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">🎒</div>
+      <div class="merch-body"><div class="merch-name">Mochila Selección Argentina Adidas</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/1k9iYx8" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">👒</div>
+      <div class="merch-body"><div class="merch-name">Piluso Selección Argentina Adidas</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/11NdRDm" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">💡</div>
+      <div class="merch-body"><div class="merch-name">Velador LED Mundial 2026 USB</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+    <a class="merch-card" href="https://meli.la/1E2Ui93" target="_blank" rel="noopener sponsored nofollow">
+      <div class="merch-img">📦</div>
+      <div class="merch-body"><div class="merch-name">Caja organizadora figuritas Mundial 2026</div><span class="merch-cta">Ver en Mercado Libre</span></div>
+    </a>
+  </div>
+</section>
 <section class="sponsors">
   <div class="wrap">
     <div class="sp-title">Auspiciantes</div>
@@ -593,7 +657,8 @@ async function boot(){
   syncBDL();
   setInterval(syncBDL, 45000);
 }
-function renderAll(){ renderTicker();renderHero();renderResumen();renderGroups();renderFilters();renderMatches();renderBracket();renderScorers();renderRanking();renderStats(); if(!window.__an){window.__an=1; if(window.gsap&&window.ScrollTrigger)animateIntro();} }
+function renderAll(){ renderTicker();renderHero();renderResumen();renderGroups();renderFilters();renderMatches();renderBracket();renderScorers();renderRanking();renderStats();updateLiveBtn(); if(!window.__an){window.__an=1; if(window.gsap&&window.ScrollTrigger)animateIntro();} }
+function updateLiveBtn(){var btn=document.getElementById('liveBtn');if(!btn)return;var lv=M.find(function(m){return m.s==="LIVE";});if(lv){btn.style.display='flex';btn.onclick=function(){try{openMatch(lv._i);}catch(e){goHome();}};}else{btn.style.display='none';}}
 function fmt(iso){try{const d=new Date(iso);return d.toLocaleString('es-AR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})+' hs';}catch(e){return iso||'—';}}
 function mmin(x){if(x==null)return'';const s=String(x).trim();const mm=s.match(/^(\d{1,3}):\d{2}/);if(mm)return mm[1]+"'";if(/^\d{1,3}'?$/.test(s))return s.replace(/'?$/,"'");return'';}
 function fmtKOtime(iso){try{return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',minute:'2-digit',hour12:false});}catch(e){return'';}}
@@ -1171,6 +1236,7 @@ async function openMatch(i){
 boot();
 </script>
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeTeam()"><div class="modal" id="modalBox"></div></div>
+<button id="liveBtn" class="live-btn" title="Partido en vivo"><span class="ldot"></span>EN VIVO</button>
 <button id="themeBtn" class="theme-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">☀️</button>
 <script>
 function toggleTheme(){var l=document.body.classList.toggle('light');try{localStorage.setItem('theme',l?'light':'dark');}catch(e){}var b=document.getElementById('themeBtn');if(b)b.textContent=l?'🌙':'☀️';}
