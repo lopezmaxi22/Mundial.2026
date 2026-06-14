@@ -2,3 +2,8 @@ __pycache__/
 *.pyc
 .DS_Store
 .venv/
+
+# API key - NUNCA subir al repo publico
+api.txt
+*.key
+.env
