@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mundial 2026 · Dashboard Deportivo</title>
 <meta name="description" content="Dashboard del Mundial 2026: resultados en vivo, tabla de posiciones, goleadores y estadísticas de cada partido en tiempo real. Sitio no oficial.">
-<!-- ===== GOOGLE ADSENSE: cuando Google te apruebe, descomenta esta linea y pone tu ca-pub-XXXX ===== -->
-<!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+<!-- Google AdSense -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6775191750550586" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -318,6 +318,20 @@
   .rs-h{font-family:'Oswald';font-weight:600;font-size:15px;letter-spacing:.3px;color:var(--txt);margin:24px 0 12px;display:flex;align-items:center;gap:8px}
   .rs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
   @media(max-width:600px){.rs-grid{grid-template-columns:1fr}}
+  /* ===== BARRA LATERAL SPONSORS ===== */
+  .side-spon{position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;align-items:center;gap:16px;padding:16px 12px;background:rgba(10,16,30,.72);backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:18px;box-shadow:0 10px 34px rgba(0,0,0,.45)}
+  .ss-label{font-family:'Oswald';font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted2)}
+  .ss-item{opacity:.65;transition:.25s ease;display:block}
+  .ss-item img{width:auto;display:block;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5))}
+  .ss-main img{height:58px}
+  .ss-item.ss-sec img{height:40px}
+  .ss-item:hover{opacity:1;transform:scale(1.07)}
+  @media(max-width:1280px){.side-spon{display:none}}
+  .ad-slot{width:100%;min-height:90px;display:flex;align-items:center;justify-content:center;margin:0 0 20px;border:1px dashed var(--line);border-radius:12px;background:rgba(255,255,255,.015);overflow:hidden}
+  .ad-ph{font-family:'Oswald';font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted2);opacity:.5}
+  body.light{--bg:#EEF2F8;--bg2:#FFFFFF;--bg3:#E6EDF6;--panel:rgba(255,255,255,.96);--panel2:rgba(244,247,251,.92);--line:rgba(0,0,0,.10);--brd:rgba(0,0,0,.14);--txt:#15202E;--muted:#51607A;--muted2:#7E8DA4;--shadow:0 2px 10px rgba(0,0,0,.10),0 14px 40px rgba(0,0,0,.10);background:#EEF2F8}
+  .theme-btn{position:fixed;top:14px;right:16px;z-index:80;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--txt);font-size:18px;cursor:pointer;box-shadow:var(--shadow);transition:.2s;display:flex;align-items:center;justify-content:center}
+  .theme-btn:hover{transform:scale(1.08)}
   /* RESPONSIVE */
   @media(max-width:600px){
     .bg-art{width:128vw;opacity:.12;top:40%}
@@ -432,10 +446,23 @@
   </div>
 </nav>
 
+<aside class="side-spon">
+  <div class="ss-label">Sponsors</div>
+  <a class="ss-item ss-main" href="https://canillerasmalasia.com.ar" target="_blank" rel="noopener" title="Canilleras Malasia"><img src="sponsors/malasia.svg" alt="Malasia"></a>
+  <a class="ss-item ss-sec" href="https://lopezmaxi22.github.io/ml-consulting/" target="_blank" rel="noopener" title="ML Cybersecurity & Networks"><img src="sponsors/ml.svg" alt="ML"></a>
+</aside>
+
 <main class="wrap">
   <section class="view active" id="inicio">
     <div class="section-h">Resumen del torneo</div>
     <p class="lead">Lo último del Mundial: partidos en vivo, resultados recientes y lo que se viene. Tocá cualquier partido para ver el detalle completo.</p>
+    <div class="ad-slot">
+      <!-- PUBLICIDAD AdSense: cuando Google te apruebe, reemplaza este bloque por tu unidad de anuncio responsive:
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXXX" data-ad-slot="XXXXXXXXXX" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+      -->
+      <span class="ad-ph">Espacio publicitario</span>
+    </div>
     <div id="resumenContainer"><div class="loading">Cargando partidos…</div></div>
   </section>
 
@@ -510,14 +537,11 @@
     <div class="sp-title">Auspiciantes</div>
     <div class="sp-logos">
       <a class="sp-item sp-malasia" href="https://canillerasmalasia.com.ar" target="_blank" rel="noopener" title="Canilleras Malasia"><img src="sponsors/malasia.svg" alt="Canilleras Malasia"></a>
-      <a class="sp-item sp-ml" href="https://www.linkedin.com/in/maximiliano-gabriel-lopez-785155268" target="_blank" rel="noopener" title="ML Cybersecurity & Networks"><img src="sponsors/ml.svg" alt="ML Cybersecurity & Networks"></a>
+      <a class="sp-item sp-ml" href="https://lopezmaxi22.github.io/ml-consulting/" target="_blank" rel="noopener" title="ML Cybersecurity & Networks"><img src="sponsors/ml.svg" alt="ML Cybersecurity & Networks"></a>
       <a class="sp-item sp-explotter" href="#" target="_blank" rel="noopener" title="Explotter"><img src="sponsors/explotter.svg" alt="Explotter"></a>
     </div>
   </div>
 </section>
-<div class="support">
-  <a class="cafecito" href="https://cafecito.app/TU-USUARIO" target="_blank" rel="noopener">☕ Invitame un cafecito</a>
-</div>
 <footer>
   <div class="foot-links"><a href="acerca.html">Acerca de</a> · <a href="contacto.html">Contacto</a> · <a href="privacidad.html">Privacidad</a></div>
   <b>MUNDIAL 2026</b> · Dashboard deportivo · sitio no oficial<br>Hecho con ⚡ por ML Cybersecurity &amp; Networks
@@ -570,9 +594,9 @@ async function boot(){
   setInterval(syncBDL, 45000);
 }
 function renderAll(){ renderTicker();renderHero();renderResumen();renderGroups();renderFilters();renderMatches();renderBracket();renderScorers();renderRanking();renderStats(); if(!window.__an){window.__an=1; if(window.gsap&&window.ScrollTrigger)animateIntro();} }
-function fmt(iso){try{const d=new Date(iso);return d.toLocaleString('es-AR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+' hs';}catch(e){return iso||'—';}}
+function fmt(iso){try{const d=new Date(iso);return d.toLocaleString('es-AR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit',hour12:false})+' hs';}catch(e){return iso||'—';}}
 function mmin(x){if(x==null)return'';const s=String(x).trim();const mm=s.match(/^(\d{1,3}):\d{2}/);if(mm)return mm[1]+"'";if(/^\d{1,3}'?$/.test(s))return s.replace(/'?$/,"'");return'';}
-function fmtKOtime(iso){try{return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',minute:'2-digit'});}catch(e){return'';}}
+function fmtKOtime(iso){try{return new Date(iso).toLocaleTimeString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',hour:'2-digit',minute:'2-digit',hour12:false});}catch(e){return'';}}
 function fmtKOday(iso){try{return new Date(iso).toLocaleDateString('es-AR',{timeZone:'America/Argentina/Buenos_Aires',weekday:'short',day:'2-digit',month:'short'});}catch(e){return'';}}
 function isTodayART(iso){try{const o={timeZone:'America/Argentina/Buenos_Aires',day:'2-digit',month:'2-digit',year:'numeric'};return new Date(iso).toLocaleDateString('es-AR',o)===new Date().toLocaleDateString('es-AR',o);}catch(e){return false;}}
 
@@ -701,7 +725,7 @@ function renderHero(){
   const wrap=document.getElementById('heroWrap');
   const live=M.find(m=>m.s==="LIVE");
   let m=live, mode= live?"live":"next";
-  if(!m){ const ups=M.filter(x=>x.s==="UP").slice().sort((a,b)=>(a.ko?Date.parse(a.ko):9e15)-(b.ko?Date.parse(b.ko):9e15)); m=ups[0]; }
+  if(!m){ const now=Date.now(); const ups=M.filter(x=>x.s!=="FT"&&x.s!=="LIVE"&&x.ko&&Date.parse(x.ko)>now).slice().sort((a,b)=>Date.parse(a.ko)-Date.parse(b.ko)); m=ups[0]; }
   if(!m){ wrap.innerHTML=""; return; }
   const H=T[m.h],A=T[m.a];if(!H||!A){wrap.innerHTML="";return;}
   const hoy=m.ko?isTodayART(m.ko):false;
@@ -1147,5 +1171,10 @@ async function openMatch(i){
 boot();
 </script>
 <div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeTeam()"><div class="modal" id="modalBox"></div></div>
+<button id="themeBtn" class="theme-btn" onclick="toggleTheme()" title="Cambiar tema claro/oscuro" aria-label="Cambiar tema">☀️</button>
+<script>
+function toggleTheme(){var l=document.body.classList.toggle('light');try{localStorage.setItem('theme',l?'light':'dark');}catch(e){}var b=document.getElementById('themeBtn');if(b)b.textContent=l?'🌙':'☀️';}
+(function(){try{if(localStorage.getItem('theme')==='light'){document.body.classList.add('light');var b=document.getElementById('themeBtn');if(b)b.textContent='🌙';}}catch(e){}})();
+</script>
 </body>
 </html>

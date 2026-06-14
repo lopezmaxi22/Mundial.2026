@@ -16,7 +16,7 @@ const BDL_BASE = "https://api.balldontlie.io/fifa/worldcup/v1";
 const ALLOWED_ORIGINS = [
   "https://lopezmaxi22.github.io",
   "https://mundial-2026-45s.pages.dev",
-  // "https://TU-DOMINIO-PROPIO.com",
+  "https://mundial.canillerasmalasia.com.ar",
 ];
 
 // Endpoints permitidos y su cache (en segundos).
