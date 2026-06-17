@@ -1,85 +1,113 @@
 #!/usr/bin/env python3
 """
-Actualiza data.json con los resultados del Mundial 2026 desde football-data.org.
-Solo toca marcadores/estado de los partidos (s, hg, ag) y el timestamp 'updated'.
-Las fichas editoriales de las selecciones (teams) NO se tocan.
-
-Requiere: variable de entorno FOOTBALL_API_KEY (token gratis de football-data.org)
-Uso local:  set FOOTBALL_API_KEY=xxxx  &&  python scripts/update_data.py
+Actualiza data.json con los resultados del Mundial 2026 desde el MISMO
+servidor que usa el dashboard en vivo: el Cloudflare Worker que proxea
+balldontlie. NO necesita ninguna API key (el Worker ya la tiene del lado
+servidor). Solo toca s/hg/ag de los partidos y el timestamp 'updated';
+las fichas editoriales de las selecciones (teams) NO se tocan.
 """
 import os, sys, json, datetime, urllib.request
 
-API_KEY = os.environ.get("FOOTBALL_API_KEY", "").strip()
-COMP = "WC"  # codigo de la Copa del Mundo en football-data.org
+WORKER = "https://mundial-api.lopez-maxi.workers.dev/api"
+SEASON = 2026
 DATA_PATH = os.path.join(os.path.dirname(__file__), "..", "data.json")
 
-# Mapea nombres de la API (ingles) -> codigos internos del dashboard
-NAME_MAP = {
-    "mexico": "MEX", "south africa": "RSA", "korea republic": "KOR", "south korea": "KOR",
-    "czech republic": "CZE", "czechia": "CZE", "canada": "CAN", "switzerland": "SUI",
-    "qatar": "QAT", "bosnia and herzegovina": "BIH", "bosnia-herzegovina": "BIH",
-    "brazil": "BRA", "morocco": "MAR", "haiti": "HAI", "scotland": "SCO",
-    "united states": "USA", "usa": "USA", "paraguay": "PAR", "australia": "AUS",
-    "turkey": "TUR", "turkiye": "TUR", "turkiye (turkey)": "TUR", "germany": "GER",
-    "ecuador": "ECU", "ivory coast": "CIV", "cote d'ivoire": "CIV", "curacao": "CUW",
-    "netherlands": "NED", "japan": "JPN", "sweden": "SWE", "tunisia": "TUN",
-    "belgium": "BEL", "egypt": "EGY", "iran": "IRN", "ir iran": "IRN", "new zealand": "NZL",
-    "spain": "ESP", "cape verde": "CPV", "cabo verde": "CPV", "saudi arabia": "KSA",
-    "uruguay": "URU", "france": "FRA", "senegal": "SEN", "iraq": "IRQ", "norway": "NOR",
-    "argentina": "ARG", "algeria": "ALG", "austria": "AUT", "jordan": "JOR",
-    "portugal": "POR", "dr congo": "COD", "congo dr": "COD", "uzbekistan": "UZB",
-    "colombia": "COL", "england": "ENG", "croatia": "CRO", "ghana": "GHA", "panama": "PAN",
+# Nombres de balldontlie -> codigos internos del dashboard (igual que APINAME)
+APINAME = {
+    "Mexico": "MEX", "South Africa": "RSA", "South Korea": "KOR", "Korea Republic": "KOR",
+    "Republic of Korea": "KOR", "Czech Republic": "CZE", "Czechia": "CZE", "Canada": "CAN",
+    "Bosnia and Herzegovina": "BIH", "Qatar": "QAT", "Switzerland": "SUI", "Brazil": "BRA",
+    "Morocco": "MAR", "Haiti": "HAI", "Scotland": "SCO", "United States": "USA",
+    "United States of America": "USA", "Paraguay": "PAR", "Australia": "AUS", "Turkey": "TUR",
+    "T\u00fcrkiye": "TUR", "Germany": "GER", "Cura\u00e7ao": "CUW", "Curacao": "CUW",
+    "Ivory Coast": "CIV", "Cote d'Ivoire": "CIV", "C\u00f4te d'Ivoire": "CIV", "Ecuador": "ECU",
+    "Netherlands": "NED", "Japan": "JPN", "Sweden": "SWE", "Tunisia": "TUN", "Belgium": "BEL",
+    "Egypt": "EGY", "Iran": "IRN", "New Zealand": "NZL", "Spain": "ESP", "Cape Verde": "CPV",
+    "Cabo Verde": "CPV", "Saudi Arabia": "KSA", "Uruguay": "URU", "France": "FRA", "Senegal": "SEN",
+    "Iraq": "IRQ", "Norway": "NOR", "Argentina": "ARG", "Algeria": "ALG", "Austria": "AUT",
+    "Jordan": "JOR", "Portugal": "POR", "Democratic Republic of the Congo": "COD", "DR Congo": "COD",
+    "Uzbekistan": "UZB", "Colombia": "COL", "England": "ENG", "Croatia": "CRO", "Ghana": "GHA",
+    "Panama": "PAN",
 }
 
-def norm(s):
-    return (s or "").strip().lower()
+def code(team):
+    if not team:
+        return None
+    return APINAME.get((team.get("name") or "").strip()) or (team.get("abbreviation") or "").strip() or None
 
-def to_code(name):
-    return NAME_MAP.get(norm(name))
+def grp_letter(g):
+    if not g:
+        return ""
+    name = g.get("name") if isinstance(g, dict) else g
+    return str(name or "").replace("Group", "").replace("group", "").replace("GROUP", "").strip()
+
+def get_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "mundial-updater"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read().decode("utf-8"))
+
+def fetch_all_matches():
+    out, cursor, guard = [], None, 0
+    while guard < 8:
+        url = "%s/matches?seasons[]=%d&per_page=100" % (WORKER, SEASON)
+        if cursor:
+            url += "&cursor=%s" % cursor
+        j = get_json(url)
+        out += j.get("data", [])
+        cursor = (j.get("meta") or {}).get("next_cursor")
+        guard += 1
+        if not cursor:
+            break
+    return out
 
 def main():
-    if not API_KEY:
-        print("ERROR: falta FOOTBALL_API_KEY", file=sys.stderr); sys.exit(1)
     with open(DATA_PATH, encoding="utf-8") as f:
         data = json.load(f)
 
-    url = "https://api.football-data.org/v4/competitions/%s/matches" % COMP
-    req = urllib.request.Request(url, headers={"X-Auth-Token": API_KEY})
     try:
-        with urllib.request.urlopen(req, timeout=30) as r:
-            api = json.loads(r.read().decode("utf-8"))
+        api = fetch_all_matches()
     except Exception as e:
-        print("ERROR consultando la API:", e, file=sys.stderr); sys.exit(2)
+        print("ERROR consultando el Worker:", e, file=sys.stderr)
+        sys.exit(2)
 
-    # Indexa partidos de la API por (codigo_local, codigo_visitante)
-    api_index = {}
-    for mt in api.get("matches", []):
-        h = to_code(mt.get("homeTeam", {}).get("name"))
-        a = to_code(mt.get("awayTeam", {}).get("name"))
-        if h and a:
-            api_index[(h, a)] = mt
+    if not api:
+        print("La API no devolvio partidos; no se toca data.json.", file=sys.stderr)
+        sys.exit(0)
+
+    # index de la API por (grupo, equipos ordenados)
+    idx = {}
+    for x in api:
+        hc, ac = code(x.get("home_team")), code(x.get("away_team"))
+        if not hc or not ac:
+            continue
+        idx[grp_letter(x.get("group")) + "|" + "-".join(sorted([hc, ac]))] = (x, hc)
 
     updated = 0
     for m in data["matches"]:
-        mt = api_index.get((m["h"], m["a"]))
-        if not mt:
+        rec = idx.get(m["g"] + "|" + "-".join(sorted([m["h"], m["a"]])))
+        if not rec:
             continue
-        status = mt.get("status")          # SCHEDULED, IN_PLAY, PAUSED, FINISHED
-        ft = mt.get("score", {}).get("fullTime", {})
-        hg, ag = ft.get("home"), ft.get("away")
-        if status == "FINISHED" and hg is not None and ag is not None:
-            if m["s"] != "FT" or m["hg"] != hg or m["ag"] != ag:
-                m["s"], m["hg"], m["ag"], m["tip"] = "FT", hg, ag, ""
-                updated += 1
-        elif status in ("IN_PLAY", "PAUSED") and hg is not None and ag is not None:
-            if m["hg"] != hg or m["ag"] != ag:
-                m["hg"], m["ag"] = hg, ag
-                updated += 1
+        x, hc = rec
+        if hc == m["h"]:
+            hg, ag = x.get("home_score"), x.get("away_score")
+        else:
+            hg, ag = x.get("away_score"), x.get("home_score")
+        status = x.get("status")
+        ns, nhg, nag = m.get("s"), m.get("hg"), m.get("ag")
+        if status == "completed" and hg is not None and ag is not None:
+            ns, nhg, nag = "FT", hg, ag
+        elif status == "in_progress" and hg is not None and ag is not None:
+            ns, nhg, nag = "LIVE", hg, ag
+        if (ns, nhg, nag) != (m.get("s"), m.get("hg"), m.get("ag")):
+            m["s"], m["hg"], m["ag"] = ns, nhg, nag
+            if ns == "FT":
+                m["tip"] = ""
+            updated += 1
 
     data["updated"] = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds")
     with open(DATA_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
-    print("OK - partidos actualizados: %d" % updated)
+        json.dump(data, f, ensure_ascii=False, indent=0)
+    print("OK - partidos actualizados: %d  | updated=%s" % (updated, data["updated"]))
 
 if __name__ == "__main__":
     main()
