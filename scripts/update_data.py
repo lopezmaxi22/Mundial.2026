@@ -104,7 +104,8 @@ def main():
                 m["tip"] = ""
             updated += 1
 
-    data["updated"] = datetime.datetime.now(datetime.timezone.utc).astimezone().isoformat(timespec="seconds")
+    AR = datetime.timezone(datetime.timedelta(hours=-3))  # Argentina (UTC-3, sin horario de verano)
+    data["updated"] = datetime.datetime.now(AR).isoformat(timespec="seconds")
     with open(DATA_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=0)
     print("OK - partidos actualizados: %d  | updated=%s" % (updated, data["updated"]))

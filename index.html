@@ -788,7 +788,7 @@ async function syncBDL(){
     // 3) Goleadores reales (eventos)
     try{ await buildScorers(all); }catch(e){}
 
-    const now=new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
+    const now=new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit',hour12:false});
     const anyLive=all.some(x=>x.status==='in_progress');
     document.getElementById('updTime').innerHTML=`${now} hs`+(anyLive?` · <span style="color:#7fd1b3">🔴 EN VIVO</span>`:` · datos oficiales`);
     renderAll();
